@@ -6,8 +6,8 @@ Steps to setup everything and get working
 1. Download
 2. cp xe.env.template xe.env
 3. edit xe.env - put in a sys password, and if you want to edit other values appropriately
-4. run build_all.sh
-5. run setup_env_new.sh
+4. run build_all.sh (this downloads all required software and builds ora-ords and ora-web docker images)
+5. run setup_env_new.sh (this sets up the db, configures everthing and starts it up)
 
 You then have a new docker network (xedb_network) with these machines:
 
@@ -27,3 +27,10 @@ C) ora-web : an nginx:alpine webserver
 - listens on 80
 - serves up apex images on /images/
 - redirects /ords requests to the ora-ords machine (on port 8080)
+
+
+Later use :
+
+1. stop_env.sh - stop all running servers
+2. start_env.s - starts all servers
+3. setup_env_new.sh - destroys all data and recreates the servers

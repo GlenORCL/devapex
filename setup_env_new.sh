@@ -33,7 +33,7 @@ done
 ./install_apex_into_xe.sh
 
 # Install APEX base
-# apex_base - 1=DB schema to create, 2=Workspace to create, 3=email address for apex users
+# apex_base - 1=DB schema to create, 2=Workspace to create, 3=email address for apex users (schema and apex user pw defaults to lowercase user name)
 cp apex_base.sql extras/apex_base.sql 
 docker exec ${DB_CONTAINER} bash -c "
 cd /opt/oracle/extras; sqlplus /nolog <<SQLEOF
@@ -45,8 +45,7 @@ SQLEOF
 "
 
 # Install all APEX sample apps
-# 1=workspace to install samples into, 2=db schema to install into
-# apex_sample_apps - 1=DB schema to install into, 2=Workspace to install into
+# 1 - db schema, 2 - db password, 3 - db service, 4 - Workspace NAME
 ./apex_sample_apps.sh gjm gjm ${DB_SERVICE} gjm_ws
 
 # all done, so start ORDS

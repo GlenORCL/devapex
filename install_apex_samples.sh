@@ -4,7 +4,7 @@
 # 3 - db service
 # 4 - Workspace NAME
 
-cd /opt/oracle/extras/apex_22_2_samples/apex-22.2/sample-apps
+cd /opt/oracle/extras/apex_samples/apex-22.2/sample-apps
 
 for i in $(ls */*.sql)
 do

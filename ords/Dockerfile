@@ -33,7 +33,6 @@ RUN sh ${SCRIPTS_DIR}/ords_software_installation.sh
 # Perform the following actions as the ords user
 USER ords
 
-#VOLUME [${CATALINA_BASE}]
 EXPOSE 8080 8443
 HEALTHCHECK --interval=1m --start-period=1m \
    CMD ${SCRIPTS_DIR}/healthcheck.sh >/dev/null || exit 1

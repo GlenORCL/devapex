@@ -1,0 +1,6 @@
+*.zip
+extras/**
+xeoradata/**
+.DS_Store
+xe.env
+

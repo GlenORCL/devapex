@@ -32,5 +32,5 @@ C) ora-web : an nginx:alpine webserver
 Later use :
 
 1. stop_env.sh - stop all running servers
-2. start_env.s - starts all servers
+2. start_env.sh - starts all servers
 3. setup_env_new.sh - destroys all data and recreates the servers

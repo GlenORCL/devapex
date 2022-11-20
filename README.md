@@ -6,8 +6,10 @@ Steps to setup everything and get working :
 2. cp devapex.env.template devapex.env
 3. edit devapex.env - put in a sys password, and if you want to edit other values appropriately
 4. edit custom_devapex
-    - this file is sourced as apart of destroy_setup_new_devapex.sh after everyting is built/setup
+    - by default, this will create play schema and play_ws workspace (with play/play as apex user/pw) and install ALL apex samples into this
+    - this file can be left as is, or 
     - put in here the db schema, apex workspace that you want to create and include the apex samples into that workspace if you want
+    - this file is sourced as apart of destroy_setup_new_devapex.sh after everyting is built/setup
 5. run build_all.sh (this downloads all required software and builds ora-ords and ora-web docker images)
 6. run destroy_setup_new_devapex.sh (this sets up the db, configures everthing and starts it up)
 

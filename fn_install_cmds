@@ -1,0 +1,39 @@
+
+function install_setup_extras {
+
+mkdir extras
+cp -R vm_scripts extras/scripts
+unzip -q ${APEX_ZIP} -x apex/images/* -d extras
+unzip -q ${SAMPLES_ZIP} -d extras/apex_samples
+
+}
+
+function install_apex_into_xe {
+
+docker exec ${DB_CONTAINER} bash -c "
+cd /opt/oracle/extras/apex; sqlplus /nolog <<SQLEOF
+conn sys/${SYS_PASSWORD} as sysdba
+alter session set container=${DB_PDB};
+@apxsilentins.sql ${TABLESPACE_APEX} ${TABLESPACE_FILES} ${TABLESPACE_TEMP} ${IMAGES} ${APEX_PUBLIC_USER_PASSWORD} ${APEX_LISTENER_PASSWORD} ${APEX_REST_PASSWORD} ${APEX_ADMIN_PASSWORD}SQLEOF
+SQLEOF
+"
+
+}
+
+function install_apex_samples {
+    
+docker exec ${DB_CONTAINER} bash -c "/opt/oracle/extras/scripts/install_apex_samples.sh $1 $2 ${DB_PDB} $3 "
+    
+}
+
+function install_exec_sql_in_pdb {
+
+docker exec ${DB_CONTAINER} bash -c "
+cd /opt/oracle/extras; sqlplus /nolog <<SQLEOF
+conn sys/${SYS_PASSWORD} as sysdba
+alter session set container=${DB_PDB};
+$*
+SQLEOF
+"
+
+}

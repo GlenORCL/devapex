@@ -2,5 +2,5 @@
 extras/**
 xeoradata/**
 .DS_Store
-xe.env
+devapex.env
 

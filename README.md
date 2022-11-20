@@ -1,23 +1,24 @@
 # devapex
 My DEV setup for APEX and Oracle DB and ORDS and NGINX Web
 
-Steps to setup everything and get working
-
+Steps to setup everything and get working :
 1. Download
-2. cp xe.env.template xe.env
-3. edit xe.env - put in a sys password, and if you want to edit other values appropriately
-4. run build_all.sh (this downloads all required software and builds ora-ords and ora-web docker images)
-5. run setup_env_new.sh (this sets up the db, configures everthing and starts it up)
+2. cp devapex.env.template devapex.env
+3. edit devapex.env - put in a sys password, and if you want to edit other values appropriately
+4. edit custom_devapex
+    - this file is sourced as apart of destroy_setup_new_devapex.sh after everyting is built/setup
+    - put in here the db schema, apex workspace that you want to create and include the apex samples into that workspace if you want
+5. run build_all.sh (this downloads all required software and builds ora-ords and ora-web docker images)
+6. run destroy_setup_new_devapex.sh (this sets up the db, configures everthing and starts it up)
 
 You then have a new docker network (xedb_network) with these machines:
 
-A) ora21xe_con - oracle xe 21 database
+A) ora-db - oracle xe 21 database
 - listens on 1521
 - pdb = xepdb1
 - apex installed inside the pdb
-- inside setup_env_new.sh
-- this also creates a new workspace (gjm_ws), new db user (gjm, pw=gjm) and installs all apex samples into that schema/workspace
-- edit this file if you want to change these defaults, or create additional workspaces and schemas
+- this also creates a new workspace (play_ws), new db user (play, pw=play) and installs all apex samples into that schema/workspace
+- edit custom_devapex.sh to modify or create additional workspaces and schemas
 
 B) ora-ords : an ords server running on eclipse-temurin:11-jre-alpine using jetty
 - listens on 8080
@@ -30,7 +31,11 @@ C) ora-web : an nginx:alpine webserver
 
 
 Later use :
+1. stop_devapex.sh - stop all running servers
+2. start_devapex.shœ - starts all servers
+3. destroy_setup_new_devapex.sh - destroys all data and recreates the servers
 
-1. stop_env.sh - stop all running servers
-2. start_env.sh - starts all servers
-3. setup_env_new.sh - destroys all data and recreates the servers
+Advanced use :
+1. edit vm_sripts/db_init.sql
+    - put in here the standard things you want to do when the db is created (executes before apex is installed and before custom_devapex is invokved)
+

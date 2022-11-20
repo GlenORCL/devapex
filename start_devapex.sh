@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ./xe.env
+source devapex.env
 
 docker start ${DB_CONTAINER}
 docker start ${ORDS_CONTAINER}

@@ -3,7 +3,7 @@ set concat on
 set concat .
  
 Rem
-Rem    Title:  apex_base.sql
+Rem    Title:  apex_ws_schema.sql
 Rem
 Rem    Description:  This script will setup the basic workspaces, db users, apex users, tablespaces for our base apex installation
 Rem
@@ -14,7 +14,7 @@ Rem 3 - email address
 Rem
  
 column foo1 new_val LOG1
-select 'apex_base_'||to_char(sysdate,'YYYY-MM-DD_HH24-MI-SS')||'.log' as foo1 from sys.dual;
+select 'apex_ws_schema_'||to_char(sysdate,'YYYY-MM-DD_HH24-MI-SS')||'.log' as foo1 from sys.dual;
 spool ^LOG1
  
 timing start "Create tablespaces, schemas and workspaces"

@@ -1,0 +1,50 @@
+function docker_initiate_db {
+
+docker run -dit --name ${DB_CONTAINER} \
+           -p ${LOCAL_DB_PORT}:${DB_PORT}  \
+           --network=${NETWORK_NAME} \
+           -e "ORACLE_PASSWORD=${SYS_PASSWORD}" \
+           -v $(pwd)/extras:/opt/oracle/extras \
+           -v $(pwd)/xeoradata:/opt/oracle/oradata \
+           ${DB_IMAGE}
+
+}
+
+function docker_await_db_ready {
+
+while [$(docker logs ${DB_CONTAINER}|grep "DATABASE IS READY TO USE"|wc -l) -eq 0 ]
+do
+  echo "DB not ready yet - waiting..."
+  sleep 5
+done
+echo "DATABASE IS READY TO USE"
+
+}
+
+function docker_initiate_ords {
+
+docker run -dit --name ${ORDS_CONTAINER} \
+             -p ${LOCAL_ORDS_PORT}:8080 \
+             --network=${NETWORK_NAME} \
+             -e "DB_HOSTNAME=${DB_HOSTNAME}" \
+             -e "DB_PORT=${DB_PORT}" \
+             -e "DB_SERVICE=${DB_SERVICE}" \
+             -e "APEX_PUBLIC_USER_PASSWORD=${APEX_PUBLIC_USER_PASSWORD}" \
+             -e "APEX_TABLESPACE=${TABLESPACE_APEX}" \
+             -e "TEMP_TABLESPACE=${TABLESPACE_FILES}" \
+             -e "APEX_LISTENER_PASSWORD=${APEX_LISTENER_PASSWORD}" \
+             -e "APEX_REST_PASSWORD=${APEX_REST_PASSWORD}" \
+             -e "PUBLIC_PASSWORD=${PUBLIC_PASSWORD}" \
+             -e "SYS_PASSWORD=${SYS_PASSWORD}" \
+             ${ORDS_IMAGE}
+
+}
+
+function docker_initiate_web {
+
+docker run -dit --name ${WEB_CONTAINER} \
+             -p ${LOCAL_HTTP_PORT}:80 -p ${LOCAL_HTTPS_PORT}:443 \
+             --network=${NETWORK_NAME} \
+             ${WEB_IMAGE}
+
+}

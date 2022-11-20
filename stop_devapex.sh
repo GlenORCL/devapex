@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ./xe.env
+source devapex.env
 
 docker stop ${ORDS_CONTAINER}
 docker stop ${DB_CONTAINER}

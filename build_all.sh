@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ./xe.env
+source devapex.env
 
 if [ -f "${APEX_ZIP}" ]; then
     echo "${APEX_ZIP} exists."
@@ -21,10 +21,10 @@ else
 fi
 
 cd ords
-./build_ords.sh
+docker build -t ${ORDS_IMAGE} .
 cd ..
 
 cd web
-./build_web.sh
+docker build -t ${WEB_IMAGE} .
 cd ..
 

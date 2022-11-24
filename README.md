@@ -15,7 +15,8 @@ A) ora-db - oracle xe 21 database
 - pdb = xepdb1
 - apex installed inside the pdb
 - this also creates a new workspace (play_ws), new db user (play, pw=play) and installs all apex samples into that schema/workspace
-- edit custom_devapex.sh to modify or create additional workspaces and schemas
+- edit custom_devapex to modify or create additional workspaces and schemas
+- if you want to use a different version of Oracle instead of XE, you can change this 
 
 B) ora-ords : an ords server running on eclipse-temurin:11-jre-alpine using jetty
 - listens on 8080

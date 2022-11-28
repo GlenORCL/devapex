@@ -1,6 +1,8 @@
+.DS_Store
+
 *.zip
+*.log
+
 extras/**
 xeoradata/**
-.DS_Store
 devapex.env
-

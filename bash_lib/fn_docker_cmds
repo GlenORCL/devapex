@@ -1,0 +1,101 @@
+  function stop_running_container() {
+    if [ $(docker ps -q -fname=$1 |wc -l) != 0 ]
+    then
+      docker stop $1
+    fi
+  }
+  
+  function stop_docker_containers() {
+
+  logit "STOP old environment (if it is running)"
+  stop_running_container ${ORDS_CONTAINER}
+  stop_running_container ${DB_CONTAINER}
+  stop_running_container ${WEB_CONTAINER}
+  
+}
+
+function remove_docker_containers() {
+
+  function remove_existing_container() {
+    if [ $(docker ps -aq -fname=$1 |wc -l) != 0 ]
+    then
+      docker rm $1
+    fi
+  }
+
+  logit "REMOVE old environment (if it exists)"
+
+  remove_existing_container ${DB_CONTAINER}
+  remove_existing_container ${ORDS_CONTAINER}
+  remove_existing_container ${WEB_CONTAINER}
+
+  if [ $(docker network ls -q -fname=${NETWORK_NAME} |wc -l) != 0 ]
+  then
+    docker network rm ${NETWORK_NAME}
+  fi
+
+}
+
+function docker_create_network() {
+
+logit "Starting docker setup"
+docker network create ${NETWORK_NAME}
+  
+}
+
+function docker_initiate_db() {
+
+logit "Setup/Start DB"
+
+docker run -dit --name ${DB_CONTAINER} \
+           -p ${LOCAL_DB_PORT}:${DB_PORT}  \
+           --network=${NETWORK_NAME} \
+           -e "ORACLE_PASSWORD=${SYS_PASSWORD}" \
+           -v $(pwd)/extras:/opt/oracle/extras \
+           -v $(pwd)/xeoradata:/opt/oracle/oradata \
+           ${DB_IMAGE}
+
+}
+
+function docker_await_db_ready() {
+
+while [ $(docker logs ${DB_CONTAINER}|grep "DATABASE IS READY TO USE"|wc -l) -eq 0 ]
+do
+  logit "DB not ready yet - waiting..."
+  sleep 5
+done
+logit "DATABASE IS READY TO USE"
+
+}
+
+function docker_initiate_ords() {
+
+logit "Setup/Start ORDS"
+
+docker run -dit --name ${ORDS_CONTAINER} \
+             -p ${LOCAL_ORDS_PORT}:8080 \
+             --network=${NETWORK_NAME} \
+             -e "DB_HOSTNAME=${DB_HOSTNAME}" \
+             -e "DB_PORT=${DB_PORT}" \
+             -e "DB_SERVICE=${DB_SERVICE}" \
+             -e "APEX_PUBLIC_USER_PASSWORD=${APEX_PUBLIC_USER_PASSWORD}" \
+             -e "APEX_TABLESPACE=${TABLESPACE_APEX}" \
+             -e "TEMP_TABLESPACE=${TABLESPACE_FILES}" \
+             -e "APEX_LISTENER_PASSWORD=${APEX_LISTENER_PASSWORD}" \
+             -e "APEX_REST_PASSWORD=${APEX_REST_PASSWORD}" \
+             -e "PUBLIC_PASSWORD=${APEX_PUBLIC_USER_PASSWORD}" \
+             -e "SYS_PASSWORD=${SYS_PASSWORD}" \
+             ${ORDS_IMAGE}
+
+}
+
+function docker_initiate_web() {
+
+logit "Setup/Start WEB"
+
+docker run -dit --name ${WEB_CONTAINER} \
+             -p ${LOCAL_HTTP_PORT}:80 -p ${LOCAL_HTTPS_PORT}:443 \
+             --network=${NETWORK_NAME} \
+             ${WEB_IMAGE}
+
+}

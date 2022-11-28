@@ -1,0 +1,24 @@
+
+
+function error_exit()
+{
+  echo "${SCRIPT}: Crashing - ${1:-"Unknown Error"}" 1>&2
+  logit "Crashing - $*"
+  exit 1
+}
+
+function logit {
+
+echo "$*"
+echo "$(date -Iseconds) $*" >> ${LOGFILE}
+
+}
+
+trap error_exit SIGINT
+trap error_exit SIGTERM
+trap error_exit SIGKILL
+
+SCRIPT=$(basename $0)
+LOGFILE=${SCRIPT}_$(date "+%Y%m%d_%H%M%S").log
+
+logit "Starting ${SCRIPT}"

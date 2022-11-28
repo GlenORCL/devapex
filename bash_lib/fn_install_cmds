@@ -1,6 +1,11 @@
 
 function install_setup_extras {
 
+logit "REMOVE old data base files and extras directory"
+rm -Rf xeoradata
+rm -Rf extras
+
+logit "Create extras directory, copy scripts and software into there"
 mkdir extras
 cp -R vm_scripts extras/scripts
 unzip -q ${APEX_ZIP} -x apex/images/* -d extras
@@ -8,7 +13,12 @@ unzip -q ${SAMPLES_ZIP} -d extras/apex_samples
 
 }
 
-function install_apex_into_xe {
+function install_apex_into_db {
+
+# TODO
+# - test fully successful
+
+logit "Install APEX into the Oracle database"
 
 docker exec ${DB_CONTAINER} bash -c "
 cd /opt/oracle/extras/apex; sqlplus /nolog <<SQLEOF
@@ -16,11 +26,18 @@ conn sys/${SYS_PASSWORD} as sysdba
 alter session set container=${DB_PDB};
 @apxsilentins.sql ${TABLESPACE_APEX} ${TABLESPACE_FILES} ${TABLESPACE_TEMP} ${IMAGES} ${APEX_PUBLIC_USER_PASSWORD} ${APEX_LISTENER_PASSWORD} ${APEX_REST_PASSWORD} ${APEX_ADMIN_PASSWORD}SQLEOF
 SQLEOF
-"
+" >> ${LOGFILE}
+
+logit "APEX intall complete"
+
+# TODO
+# - apply any patches that exist
 
 }
 
 function install_apex_samples {
+
+logit "Install APEX Samples"
     
 docker exec ${DB_CONTAINER} bash -c "/opt/oracle/extras/scripts/install_apex_samples.sh $1 $2 ${DB_PDB} $3 "
     

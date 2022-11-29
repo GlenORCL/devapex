@@ -27,6 +27,7 @@ logit "Setup/Start DB"
 docker run -dit --name ${DB_CONTAINER} \
            -p ${LOCAL_DB_PORT}:${DB_PORT}  \
            --network=${NETWORK_NAME} \
+           --network-alias=ORADB \
            -e "ORACLE_PASSWORD=${SYS_PASSWORD}" \
            -v $(pwd)/extras:/opt/oracle/extras \
            -v $(pwd)/xeoradata:/opt/oracle/oradata \
@@ -50,8 +51,8 @@ function docker_initiate_ords() {
 logit "Setup/Start ORDS"
 
 docker run -dit --name ${ORDS_CONTAINER} \
-             -p ${LOCAL_ORDS_PORT}:8080 \
              --network=${NETWORK_NAME} \
+             --network-alias=ORDS \
              -e "DB_HOSTNAME=${DB_HOSTNAME}" \
              -e "DB_PORT=${DB_PORT}" \
              -e "DB_SERVICE=${DB_SERVICE}" \
@@ -63,6 +64,7 @@ docker run -dit --name ${ORDS_CONTAINER} \
              -e "PUBLIC_PASSWORD=${APEX_PUBLIC_USER_PASSWORD}" \
              -e "SYS_PASSWORD=${SYS_PASSWORD}" \
              ${ORDS_IMAGE}
+#             -p ${LOCAL_ORDS_PORT}:8080 \
 
 }
 
@@ -73,6 +75,7 @@ logit "Setup/Start WEB"
 docker run -dit --name ${WEB_CONTAINER} \
              -p ${LOCAL_HTTP_PORT}:80 -p ${LOCAL_HTTPS_PORT}:443 \
              --network=${NETWORK_NAME} \
+             --network-alias=WEB \
              ${WEB_IMAGE}
 
 }

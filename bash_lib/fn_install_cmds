@@ -15,9 +15,6 @@ unzip -q ${SAMPLES_ZIP} -d extras/apex_samples
 
 function install_apex_into_db {
 
-# TODO
-# - test fully successful
-
 logit "Install APEX into the Oracle database"
 
 docker exec ${DB_CONTAINER} bash -c "
@@ -32,6 +29,7 @@ logit "APEX intall complete"
 
 # TODO
 # - apply any patches that exist
+# - test fully successful
 
 }
 

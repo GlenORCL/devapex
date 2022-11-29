@@ -13,8 +13,6 @@ source bash_lib/fn_install_cmds
 source devapex.env
 
 # CLEANUP ANY EXISTING OLD ENVIRONMENT
-
-stop_docker_containers
 remove_docker_containers
 
 install_setup_extras

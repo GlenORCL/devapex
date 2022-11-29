@@ -1,0 +1,4 @@
+This directory holds the following (but scripts will download them if they do not exist) :
+- apex.zip
+
+i.e. you do not need to download these files.

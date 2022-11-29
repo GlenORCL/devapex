@@ -1,34 +1,11 @@
-  function stop_running_container() {
-    if [ $(docker ps -q -fname=$1 |wc -l) != 0 ]
-    then
-      docker stop $1
-    fi
-  }
-  
-  function stop_docker_containers() {
-
-  logit "STOP old environment (if it is running)"
-  stop_running_container ${ORDS_CONTAINER}
-  stop_running_container ${DB_CONTAINER}
-  stop_running_container ${WEB_CONTAINER}
-  
-}
 
 function remove_docker_containers() {
-
-  function remove_existing_container() {
-    if [ $(docker ps -aq -fname=$1 |wc -l) != 0 ]
-    then
-      docker rm $1
-    fi
-  }
-
   logit "REMOVE old environment (if it exists)"
 
-  remove_existing_container ${DB_CONTAINER}
-  remove_existing_container ${ORDS_CONTAINER}
-  remove_existing_container ${WEB_CONTAINER}
-
+  docker rm -f ${WEB_CONTAINER}
+  docker rm -f ${ORDS_CONTAINER}
+  docker rm -f ${DB_CONTAINER}
+  
   if [ $(docker network ls -q -fname=${NETWORK_NAME} |wc -l) != 0 ]
   then
     docker network rm ${NETWORK_NAME}

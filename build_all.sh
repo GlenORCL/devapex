@@ -21,9 +21,9 @@ function get_software() {
     fi
 }
 
-grab_software "${APEX_ZIP}" "${APEX_ZIP_URL}"
-grab_software "${SAMPLES_ZIP}" "${SAMPLES_ZIP_URL}"
-grab_software "${ORDS_ZIP}" "${ORDS_ZIP_URL}"
+get_software "${APEX_ZIP}" "${APEX_ZIP_URL}"
+get_software "${SAMPLES_ZIP}" "${SAMPLES_ZIP_URL}"
+get_software "${ORDS_ZIP}" "${ORDS_ZIP_URL}"
 
 logit "Using docker to build ${ORDS_IMAGE}"
 cd ords

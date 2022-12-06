@@ -34,10 +34,6 @@ logit "Using docker to build ${WEB_IMAGE}"
 # push apex into web software (images need to be put installed into container)
 cp ${APEX_ZIP} web/software/.
 cd web
-# remove the existing default.conf and recreate using the template (subsituting ORDS:PORT for the ords container)
-#rm -f default.conf
-#sed "s/proxy_pass ORDS:PORT;/proxy_pass http:\/\/${ORDS_CONTAINER}:8080;/g" default.conf.template | tee default.conf
-
 docker build -t ${WEB_IMAGE} .
 cd ..
 
